@@ -26,6 +26,7 @@ Command               | Dependency
 `tree`                | `tree`
 `clip`                | `xclip` on X11 or `wl-copy` on Wayland
 `type`                | `setxkbmap` and `xdotool` on X11, currently not supported on Wayland
+`select`              | `fzf`
 
 ## Installation
 

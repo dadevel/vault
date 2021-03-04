@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
+shopt -s lastpipe
 
 if [[ -v VAULT_DEBUG ]]; then
     set -x
 fi
 
 declare -ra GPG_OPTS=(--quiet --compress-algo=none --no-encrypt-to)
+declare -ra FZF_OPTS=(--layout reverse)
 declare -r WORDLIST_URL='https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt'
 
 declare -r VAULT_STORAGE="${VAULT_STORAGE:-$HOME/.vault}"
@@ -45,6 +47,25 @@ main() {
             shift
             cd "$VAULT_STORAGE"
             find . -mindepth 1 -type f -path "*${1:-}*.gpg" | sed 's|^./||;s|.gpg$||' | sort -V
+            ;;
+        1:select)
+            declare path
+            "$0" find | fzf --no-multi "${FZF_OPTS[@]}" | read -r path
+            declare -a lines
+            "$0" read "${path}" | fzf --multi "${FZF_OPTS[@]}" | mapfile -t lines
+            case "${#lines[@]}" in
+                0)
+                    ;;
+                1)
+                    echo "${lines[@]#*: }"
+                    ;;
+                *)
+                    declare line
+                    for line in "${lines[@]}"; do
+                        echo "${line}"
+                    done
+                    ;;
+            esac
             ;;
         *:show\ *\ password)
             shift
@@ -216,7 +237,7 @@ main() {
             ;;
         2:complete\ implementation|*:complete\ implementation\ *)
             shift 3
-            declare -ra commands=(init list tree find show clip type generate create read update delete load store encrypt decrypt)
+            declare -ra commands=(init list tree find select show clip type generate create read update delete load store encrypt decrypt)
             if (( $# < 2 )); then
                 for command in "${commands[@]}"; do
                     echo "${command} "
@@ -295,6 +316,7 @@ actions:
   list [SUBDIR]             list secrets
   tree [SUBDIR]             list secrets in tree view
   find [STRING]             search secrets
+  select                    interactive fuzzy search powered by fzf
   show PATH KEY             print secret attribute
   clip PATH KEY             copy secret attribute to clipboard
   type PATH KEY             type secret attribute with keyboard
