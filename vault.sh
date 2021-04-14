@@ -49,23 +49,21 @@ main() {
             find . -mindepth 1 -type f -path "*${1:-}*.gpg" | sed 's|^./||;s|.gpg$||' | sort -V
             ;;
         1:select)
-            declare path
+            declare path key
             "$0" find | fzf --no-multi "${FZF_OPTS[@]}" | read -r path
+            "$0" keys "${path}" | fzf --no-multi "${FZF_OPTS[@]}" | read -r key
+            "$0" show "${path}" "${key}"
+            ;;
+        2:keys\ *)
+            shift
             declare -a lines
-            "$0" read "${path}" | fzf --multi "${FZF_OPTS[@]}" | mapfile -t lines
-            case "${#lines[@]}" in
-                0)
-                    ;;
-                1)
-                    echo "${lines[@]#*: }"
-                    ;;
-                *)
-                    declare line
-                    for line in "${lines[@]}"; do
-                        echo "${line}"
-                    done
-                    ;;
-            esac
+            "$0" read "$1" | mapfile -t lines
+            [[ -z "${lines[0]}" ]] || echo password
+            declare line key
+            for line in "${lines[@]:1}"; do
+                key="${line%: *}"
+                [[ -z "${key}" ]] || echo "${key}"
+            done
             ;;
         *:show\ *\ password)
             shift
