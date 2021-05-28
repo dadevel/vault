@@ -2,20 +2,18 @@
 
 A simple secret store inspired by [pass](https://www.passwordstore.org/), powered by gpg and written in bash.
 
-## Comparison with pass
+In comparison with pass:
 
 - vault doesn't feature git integration, it's intended to be used with external synchronization solutions like [Nextcloud](https://nextcloud.com/) or [Syncthing](https://syncthing.net/)
-- vault can generate [diceware](https://wikipedia.org/wiki/Diceware) passphrases based on a [wordlist of EFF](https://www.eff.org/dice)
+- vault can generate [diceware](https://wikipedia.org/wiki/Diceware) passphrases based on a [wordlist](https://www.eff.org/dice)
 
-## Dependencies
+## Setup
 
 Requirements:
 
-- `bash` v5, older versions might work as well
-- `gpg` v2
-- `find`
-- `sed`
-- various tools from coreutils
+- bash
+- gnupg
+- basic utilities like coreutils, `find` and `sed`
 - your favourite text editor
 
 Some subcommands have additional dependencies:
@@ -28,18 +26,11 @@ Command               | Dependency
 `type`                | `setxkbmap` and `xdotool` on X11, currently not supported on Wayland
 `select`              | `fzf`
 
-## Installation
-
-Download the script and make it executable.
+Installation:
 
 ~~~ bash
-mkdir -p ~/.local/bin/ && curl -o ~/.local/bin/vault https://raw.githubusercontent.com/dadevel/vault/master/vault.sh && chmod 0755 ~/.local/bin/vault
-~~~
-
-Optional: Enable bash completion.
-
-~~~ bash
-echo 'eval "$(vault complete bash)"' >> ~/.bashrc
+git clone --depth 1 https://github.com/dadevel/vault.git
+sudo ./vault/setup.sh
 ~~~
 
 ## Usage
@@ -67,4 +58,3 @@ vault help
 
 - [Password Store](https://github.com/android-password-store/Android-Password-Store) app on Android
 - [Browserpass](https://github.com/browserpass/browserpass-extension) web extension for browser integration
-
