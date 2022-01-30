@@ -385,7 +385,7 @@ def _println(text: Optional[Union[str, bytes, Path]], force: bool = False):
     else:
         raise TypeError("argument 'text' has unexpected type")
     sys.stdout.buffer.write(text.rstrip())
-    if sys.stdin.isatty() or force:
+    if sys.stdout.isatty() or force:
         sys.stdout.buffer.write(b'\n')
 
 
