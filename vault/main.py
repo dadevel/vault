@@ -482,9 +482,15 @@ def _tempfile(ctx: Context) -> Generator[Path, None, None]:
 
 
 def _edit(path: Path) -> None:
-    editor = os.environ.get('EDITOR', 'vi')
+    editor = os.environ.get('EDITOR', 'vim')
+    if editor.endswith('nvim'):
+        command = [editor, '-c', 'set nobackup noswapfile noundofile shada="NONE"', '--', path]
+    elif editor.endswith('vim'):
+        command = [editor, '-c', 'set nobackup noswapfile noundofile viminfo=', '--', path]
+    else:
+        command = [editor, path]
     before = os.stat(path).st_mtime_ns
-    process = subprocess.run([editor, path], check=False)
+    process = subprocess.run(command, check=False)
     after = os.stat(path).st_mtime_ns
     if process.returncode != 0 or after <= before:
         raise click.UsageError('edit aborted')
