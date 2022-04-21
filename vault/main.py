@@ -472,7 +472,7 @@ def _iter(base: Path, recursive=True, include_dirs=False, include_files=True):
 
 @contextlib.contextmanager
 def _tempfile(ctx: Context) -> Generator[Path, None, None]:
-    _, path = tempfile.mkstemp(dir=ctx.temp, prefix=f'{NAME}-', suffix='.txt')
+    _, path = tempfile.mkstemp(dir=ctx.temp, prefix='.', suffix=f'.{NAME}.txt')
     path = Path(path)
     try:
         yield path
