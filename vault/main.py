@@ -182,7 +182,7 @@ def clip(ctx: click.Context, name: str, keys: list[str], timeout: int):
         if pid != 0:
             return
         time.sleep(timeout)
-        subprocess.run(['wl-copy', '--clear'], input=content, check=True)
+        subprocess.run(['wl-copy', '--clear'], check=True)
     elif SESSION_TYPE == 'x11':
         content = '\n'.join(_read(entry, keys))
         subprocess.run(['xclip', '-selection', 'clipboard'], input=content, text=True, check=True)
