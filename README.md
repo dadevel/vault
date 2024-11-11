@@ -26,7 +26,7 @@ select   | `fzf`
 Installation:
 
 ~~~ bash
-pip3 install --user --upgrade git+https://github.com/dadevel/vault.git
+pipx install git+https://github.com/dadevel/vault.git
 ~~~
 
 Shell completion for bash, zsh and fish:
